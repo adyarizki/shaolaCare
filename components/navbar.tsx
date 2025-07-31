@@ -1,10 +1,13 @@
 'use client';
-
+import { useSession, signOut } from "next-auth/react";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { LogOut, Settings, UserRound, Share2, Lock, UserCheck } from 'lucide-react';
 import Image from 'next/image';
 
 export default function Navbar() {
+   const { data: session } = useSession();
+
+
   return (
     <nav className="w-full bg-gray-100 shadow-md px-6 py-4 flex justify-between items-center fixed top-0 left-0 z-50">
       <div className="ml-8 text-2xl font-extrabold text-[#3f4d67]">ShaolaCRM</div>
@@ -27,9 +30,9 @@ export default function Navbar() {
               <UserRound/>
               <div>
                 <p className="font-bold text-sm flex items-center gap-1">
-                  admin 👋
+                  {session?.user?.name} 👋
                 </p>
-                <p className="text-xs text-white/80">admin@admin.com</p>
+                <p className="text-xs text-white/80">{session?.user?.email}</p>
               </div>
             </div>
 
@@ -39,15 +42,17 @@ export default function Navbar() {
                 <UserCheck size={16} />
                 Profile
               </DropdownMenu.Item>
-              <DropdownMenu.Item className="flex items-center gap-2 text-sm cursor-pointer py-1 hover:bg-gray-100 hover:text-[#2c3e50]">
+              {/* <DropdownMenu.Item className="flex items-center gap-2 text-sm cursor-pointer py-1 hover:bg-gray-100 hover:text-[#2c3e50]">
                 <Lock size={16} />
                 Change Password
-              </DropdownMenu.Item>
+              </DropdownMenu.Item> */}
             </div>
 
             {/* Logout Button */}
             <div className="p-4 pt-2">
-              <DropdownMenu.Item className="w-full bg-[#2c3e50] text-white py-2 rounded text-center flex items-center justify-center gap-2 hover:bg-[#3d566e]">
+              <DropdownMenu.Item 
+                onClick={() => signOut({ callbackUrl: "/signin" })}
+                className="w-full bg-[#2c3e50] text-white py-2 rounded text-center flex items-center justify-center gap-2 hover:bg-[#3d566e]">
                 <LogOut size={16} />
                 Logout
               </DropdownMenu.Item>

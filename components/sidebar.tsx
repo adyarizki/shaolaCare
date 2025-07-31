@@ -6,23 +6,16 @@ import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
   Package,
-  Wheat,
-  ListOrderedIcon,
-  Settings,
+  BriefcaseBusiness,
   Menu,
-  UserCheck2Icon,
-  Factory,
+  Settings
 } from 'lucide-react';
 
 const navItems = [
-  { href: '/admin', label: 'Home', icon: LayoutDashboard },
-  { href: '/admin/product', label: 'Product', icon: Package },
-  { href: '/admin/ingredient', label: 'Ingredient', icon: Wheat },
-  // { href: '/admin/customer', label: 'Customer', icon: UserCheck2Icon },
-  // { href: '/admin/order', label: 'Order', icon: ListOrderedIcon },
-
-  // { href: '/admin/production', label: 'ProductionToday', icon: Factory },
-  { href: '/settings', label: 'Settings', icon: Settings },
+  { href: '/dashboard', label: 'Home', icon: LayoutDashboard },
+  { href: '/dashboard/product', label: 'Product', icon: Package },
+  { href: '/dashboard/employee', label: 'Employee', icon: BriefcaseBusiness },
+  { href: '/dashboard/signup', label: 'Register', icon: Settings },
 ];
 
 export default function Sidebar() {
