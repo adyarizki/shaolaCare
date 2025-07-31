@@ -15,13 +15,26 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  role      Role     @default(USER)
+  id         String    @id @default(uuid())
+  name       String
+  email      String    @unique
+  password   String
+  role       Role      @default(USER)
+  verifiedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  otps       Otp[]
+  orders     Order[]
+}
+
+model Otp {
+  id        String   @id @default(cuid())
+  code      String
+  expiry    DateTime
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
-  orders    Order[]
+  updatedAt DateTime @updatedAt
 }
 
 model Product {
@@ -34,15 +47,30 @@ model Product {
 }
 
 model Order {
-  id         String   @id @default(uuid())
-  userId     String
-  productId  String
-  quantity   Int
-  total      Float
-  createdAt  DateTime @default(now())
+  id        String   @id @default(uuid())
+  userId    String
+  productId String
+  quantity  Int
+  total     Float
+  createdAt DateTime @default(now())
 
-  user       User     @relation(fields: [userId], references: [id])
-  product    Product  @relation(fields: [productId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+}
+
+model Employee {
+  id          String   @id @default(uuid())
+  name        String
+  email       String   @unique
+  phone       String
+  address     String
+  position    String
+  department  String
+  dateOfBirth DateTime?
+  hiredAt     DateTime @default(now())
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 enum Role {
