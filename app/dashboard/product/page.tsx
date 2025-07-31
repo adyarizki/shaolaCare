@@ -8,9 +8,10 @@ import { Card } from '@/components/ui/card';
 import { Pencil, Trash2, Eye } from 'lucide-react';
 import Breadcrumb from "@/components/breadcrumb";
 import Link from "next/link";
+import { Loader2 } from 'lucide-react'; 
 
 const crumbs = [
-  { label: "Admin", href: "/admin" },
+  { label: "Dashboard", href: "/dashboard" },
   { label: "Produk", href: "" },
 ];
 
@@ -26,17 +27,27 @@ export default function ProductTable() {
   const [products, setProducts] = useState<Product[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
   const itemsPerPage = 5;
 
+  const router = useRouter();
+
   useEffect(() => {
-    async function fetchData() {
-      const res = await fetch('/api/product'); // pastikan ada route handler-nya
+  async function fetchData() {
+    setIsLoading(true); // mulai loading
+    try {
+      const res = await fetch('/api/product');
       const data = await res.json();
       setProducts(data);
+    } catch (error) {
+      console.error("Gagal memuat data:", error);
+    } finally {
+      setIsLoading(false); // selesai loading
     }
+  }
 
-    fetchData();
-  }, []);
+  fetchData();
+}, []);
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) =>
@@ -47,7 +58,6 @@ export default function ProductTable() {
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
   const currentData = filteredProducts.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-  const router = useRouter();
   const handleDelete = async (id: string) => {
   const confirmDelete = confirm('Yakin ingin menghapus produk ini?');
   if (!confirmDelete) return;
@@ -88,6 +98,14 @@ export default function ProductTable() {
         className="mt-4"
       />
 
+    {isLoading ? (
+      <div className="flex flex-col items-center justify-center">
+        <Loader2 className="animate-spin w-8 h-8 text-blue-500 mb-2" />
+        <span className="text-sm text-gray-500">Memuat data employee...</span>
+      </div>
+    ) : (
+  <>
+    <div className="overflow-auto">
       <Table className="mt-4">
         <TableHeader>
           <TableRow>
@@ -105,12 +123,12 @@ export default function ProductTable() {
               <TableCell>Rp {product.price.toLocaleString()}</TableCell>
               <TableCell className="flex gap-2 justify-center">
                 <Link href={`/dashboard/product/${product.id}`}>
-                <Button variant="outline" size="icon">
+                <Button className="cursor-pointer" variant="outline" size="icon">
                   <Pencil className="w-4 h-4" />
                 </Button>
                 </Link>
                 
-                <Button variant="destructive" size="icon" onClick={() => handleDelete(product.id)}>
+                <Button className="cursor-pointer" variant="destructive" size="icon" onClick={() => handleDelete(product.id)}>
                   <Trash2 className="w-4 h-4" />
                 </Button>
          
@@ -119,13 +137,15 @@ export default function ProductTable() {
           ))}
         </TableBody>
       </Table>
+    </div>
 
-      <div className="flex justify-between items-center pt-4">
+      <div className="flex flex-col sm:flex-row justify-between items-center pt-4 gap-2">
         <span className="text-sm">
           Halaman {currentPage} dari {totalPages}
         </span>
         <div className="space-x-2">
           <Button
+            className="cursor-pointer"
             variant="outline"
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
@@ -133,6 +153,7 @@ export default function ProductTable() {
             Prev
           </Button>
           <Button
+            className="cursor-pointer"
             variant="outline"
             onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
@@ -141,6 +162,9 @@ export default function ProductTable() {
           </Button>
         </div>
       </div>
+    
+  </>
+    )}
     </Card>
   );
 }

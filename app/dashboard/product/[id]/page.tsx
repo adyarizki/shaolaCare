@@ -6,6 +6,7 @@ import { useRouter, useParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Loader2 } from "lucide-react";
 
 interface Product {
   id: string;
@@ -30,7 +31,7 @@ export default function EditProductPage() {
       try {
         setFetchLoading(true);
         const res = await fetch(`/api/product/${id}`);
-        
+
         if (!res.ok) {
           alert("Failed to fetch Product data.");
           return;
@@ -61,10 +62,10 @@ export default function EditProductPage() {
       const res = await fetch(`/api/product/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          name, 
-          stock: parseInt(stock), 
-          price: parseFloat(price) 
+        body: JSON.stringify({
+          name,
+          stock: parseInt(stock),
+          price: parseFloat(price),
         }),
       });
 
@@ -73,7 +74,7 @@ export default function EditProductPage() {
         router.push("/dashboard/product"); // Fixed redirect path
       } else {
         const errorData = await res.json();
-        alert(`Failed to update product: ${errorData.error || 'Unknown error'}`);
+        alert(`Failed to update product: ${errorData.error || "Unknown error"}`);
       }
     } catch (error) {
       console.error("Update error:", error);
@@ -85,8 +86,9 @@ export default function EditProductPage() {
 
   if (fetchLoading) {
     return (
-      <Card className="max-w-lg mx-auto p-6 mt-10">
-        <p>Loading product data...</p>
+      <Card className="max-w-lg mx-auto p-6 mt-10 flex flex-col items-center justify-center text-center gap-2">
+        <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+        <p className="text-gray-500">Memuat data produk...</p>
       </Card>
     );
   }
@@ -119,8 +121,15 @@ export default function EditProductPage() {
           min="0"
           step="0.01"
         />
-        <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? "Updating..." : "Update Product"}
+        <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-400" disabled={loading}>
+          {loading ? (
+            <>
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              Updating...
+            </>
+          ) : (
+            "Update Product"
+          )}
         </Button>
       </form>
     </Card>
