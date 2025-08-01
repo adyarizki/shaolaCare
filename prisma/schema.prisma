@@ -80,6 +80,13 @@ model Message {
   createdAt DateTime @default(now())
 }
 
+model Blogpost {
+  id        String   @id @default(uuid())
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+}
+
 enum Role {
   ADMIN
   USER

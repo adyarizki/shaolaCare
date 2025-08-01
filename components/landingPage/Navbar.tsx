@@ -10,8 +10,8 @@ export default function Navbar() {
         <h1 className="text-xl font-bold text-[#2c3e50]">ShaolaCare</h1>
         <ul className="hidden md:flex space-x-6">
           <li><a href="#" className="hover:text-[#2c3e50]">Home</a></li>
-          <li><a href="#produk" className="hover:text-[#2c3e50]">Cara Membeli</a></li>
-          <li><a href="#blog" className="hover:text-[#2c3e50]">Blog</a></li>
+          <li><a href="#produk" className="hover:text-[#2c3e50]">Produk</a></li>
+          <li><a href="#cara" className="hover:text-[#2c3e50]">Cara Pembelian</a></li>
           <li><a href="#kontak" className="hover:text-[#2c3e50]">Kontak</a></li>
         </ul>
         <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)}>☰</button>
@@ -20,7 +20,7 @@ export default function Navbar() {
         <div className="md:hidden px-4 pb-4">
           <a href="#" className="block py-2">Home</a>
           <a href="#produk" className="block py-2">Produk</a>
-          <a href="#blog" className="block py-2">Blog</a>
+          <a href="#cara" className="block py-2">Cara Pembelian</a>
           <a href="#kontak" className="block py-2">Kontak</a>
         </div>
       )}

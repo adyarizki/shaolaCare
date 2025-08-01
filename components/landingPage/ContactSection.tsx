@@ -1,5 +1,7 @@
 'use client';
-import { useState } from "react"
+
+import { useState } from "react";
+import { Loader } from "lucide-react";
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
@@ -7,6 +9,8 @@ export default function ContactSection() {
     email: "",
     message: "",
   });
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -16,6 +20,7 @@ export default function ContactSection() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
 
     const res = await fetch("/api/contact", {
       method: "POST",
@@ -25,17 +30,19 @@ export default function ContactSection() {
       body: JSON.stringify(formData),
     });
 
+    setIsLoading(false);
+
     if (res.ok) {
-      alert("Pesan berhasil ditambahkan!");
+      alert("Pesan berhasil dikirim!");
       setFormData({ nama: "", email: "", message: "" });
     } else {
-      alert("Gagal menambahkan pesan.");
+      alert("Gagal mengirim pesan.");
     }
   };
 
   return (
     <section id="kontak" className="py-16 px-4 max-w-3xl mx-auto">
-      <h3 className="text-2xl font-semibold text-center text-blue-700 mb-10">
+      <h3 className="text-2xl font-semibold text-center text-[#2a435a] mb-10">
         Hubungi Kami
       </h3>
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -74,9 +81,17 @@ export default function ContactSection() {
 
         <button
           type="submit"
-          className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+          disabled={isLoading}
+          className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 flex items-center justify-center gap-2"
         >
-          Kirim
+          {isLoading ? (
+            <>
+              <Loader className="h-5 w-5 animate-spin" />
+              Mengirim...
+            </>
+          ) : (
+            "Kirim"
+          )}
         </button>
       </form>
     </section>

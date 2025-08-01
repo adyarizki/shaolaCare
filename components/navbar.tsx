@@ -10,7 +10,7 @@ export default function Navbar() {
 
   return (
     <nav className="w-full bg-gray-100 shadow-md px-6 py-4 flex justify-between items-center fixed top-0 left-0 z-50">
-      <div className="ml-8 text-2xl font-extrabold text-[#3f4d67]">ShaolaCRM</div>
+      <div className="ml-8 text-2xl font-extrabold text-[#3f4d67]">ShaolaCare</div>
 
       {/* Profile Dropdown */}
       <DropdownMenu.Root>
@@ -40,7 +40,7 @@ export default function Navbar() {
             <div className="bg-white p-4 space-y-2">
               <DropdownMenu.Item className="flex items-center gap-2 text-sm cursor-pointer py-1 not-only:hover:bg-gray-100 hover:text-[#2c3e50]">
                 <UserCheck size={16} />
-                Profile
+                Role Sebagai : {session?.user?.role}
               </DropdownMenu.Item>
               {/* <DropdownMenu.Item className="flex items-center gap-2 text-sm cursor-pointer py-1 hover:bg-gray-100 hover:text-[#2c3e50]">
                 <Lock size={16} />

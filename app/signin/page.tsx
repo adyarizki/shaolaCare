@@ -51,7 +51,9 @@ export default function Page() {
   };
 
   return (
-    <section className="min-h-screen flex items-center justify-center bg-muted px-4">
+    <div className="bg-[#355372]">
+ 
+    <section className="min-h-screen flex items-center justify-center bg-muted px-4 ">
       <Card className="w-full max-w-md shadow-lg border">
         <CardHeader>
           <CardTitle className="text-center text-2xl font-bold">
@@ -117,5 +119,7 @@ export default function Page() {
         </CardFooter>
       </Card>
     </section>
+         
+    </div>
   );
 }

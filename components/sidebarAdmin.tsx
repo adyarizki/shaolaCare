@@ -8,13 +8,15 @@ import {
   Package,
   BriefcaseBusiness,
   Menu,
-  Settings
+  Settings,
+  StickyNote
 } from 'lucide-react';
 
 const navItems = [
   { href: '/dashboard', label: 'Home', icon: LayoutDashboard },
   { href: '/dashboard/admin/product', label: 'Product', icon: Package },
   { href: '/dashboard/admin/employee', label: 'Employee', icon: BriefcaseBusiness },
+  { href: '/dashboard/admin/blog', label: 'Blog health', icon: StickyNote },
   { href: '/dashboard/admin/signup', label: 'Register', icon: Settings },
 ];
 
