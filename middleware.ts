@@ -1,31 +1,42 @@
-import { getToken } from "next-auth/jwt"
-import { NextResponse } from "next/server"
-import type { NextRequest } from "next/server"
+// middleware.ts
+import { getToken } from "next-auth/jwt";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-// Middleware function
 export async function middleware(req: NextRequest) {
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+  const { pathname } = req.nextUrl;
 
-  const isAuthPage = req.nextUrl.pathname.startsWith("/signin")
+  // Debug token
+  console.log("Middleware - Token:", token);
+  console.log("Middleware - Path:", pathname);
 
-  // Jika sudah login dan ke /login, redirect ke dashboard
-  if (token && isAuthPage) {
-    return NextResponse.redirect(new URL("/dashboard", req.url))
+  // Jika sudah login dan ke /signin, redirect ke /dashboard
+  if (token && pathname === "/signin") {
+    return NextResponse.redirect(new URL("/dashboard", req.url));
   }
 
-  // Jika belum login dan akses ke halaman yang butuh login, redirect ke /login
-  const protectedPaths = ["/dashboard"]
+  // Jika belum login dan akses halaman dilindungi
+  const protectedPaths = ["/dashboard", "/admin"];
   const isProtected = protectedPaths.some((path) =>
-    req.nextUrl.pathname.startsWith(path)
-  )
+    pathname.startsWith(path)
+  );
 
   if (!token && isProtected) {
-    return NextResponse.redirect(new URL("/signin", req.url))
+    return NextResponse.redirect(new URL("/signin", req.url));
   }
 
-  return NextResponse.next()
+  // Khusus halaman admin, cek role
+  const isAdminRoute = pathname.startsWith("/admin");
+
+  if (isAdminRoute && token?.role !== "admin") {
+    return NextResponse.redirect(new URL("/403", req.url));
+  }
+
+  return NextResponse.next();
 }
 
+// ⚠️ Hapus "/signin" dari matcher!
 export const config = {
-  matcher: ["/dashboard/:path*",  "/signin"],
-}
+  matcher: ["/dashboard/:path*", "/admin/:path*", "/signin"],
+};

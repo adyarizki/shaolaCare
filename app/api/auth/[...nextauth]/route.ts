@@ -3,7 +3,6 @@ import { PrismaClient } from "@/app/generated/prisma";
 import bcrypt from "bcrypt";
 import { z } from "zod";
 import { NextAuthOptions } from "next-auth";
-
 // Import your providers here
 import CredentialsProvider from "next-auth/providers/credentials";
 
@@ -36,7 +35,8 @@ export const authOptions: NextAuthOptions = {
         return {
           id: user.id,
           email: user.email,
-          name: user.name
+          name: user.name,
+          role: user.role,
         };
       },
     }),
@@ -44,6 +44,23 @@ export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt" },
   pages: { signIn: "/signin" },
   secret: process.env.NEXTAUTH_SECRET,
+
+  callbacks: {
+    // ✅ Tambahkan role ke JWT
+    async jwt({ token, user }) {
+      if (user) {
+        token.role = user.role;
+      }
+      return token;
+    },
+    // ✅ Tambahkan role ke session.user
+    async session({ session, token }) {
+      if (token && session.user) {
+        session.user.role = token.role as string;
+      }
+      return session;
+    },
+  },
 };
 
 const handler = NextAuth(authOptions);

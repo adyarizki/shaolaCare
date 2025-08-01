@@ -1,20 +1,34 @@
 // app/dashboard/layout.tsx
-"use client";
 
-import Sidebar from "@/components/sidebar";
+// app/dashboard/layout.tsx (Server Component)
+import SidebarAdmin from "@/components/sidebarAdmin";
+import SidebarUser from "@/components/sidebarUser";
 import Navbar from "@/components/navbar";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route"; // Pindahkan ke file server-only
+import { redirect } from "next/navigation";
 
+export default async function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const session = await getServerSession(authOptions);
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  if (!session) {
+    redirect("/signin"); // Otomatis redirect jika belum login
+  }
+
   return (
     <div>
-  
       <Navbar />
-      <div className="flex bg-gray-100 min-h-screen" >
-        <Sidebar />
-        <main className="mt-23 px-4 sm:px-6 sm:ml-[17rem] w-full ">{children}</main>
+      <div className="flex bg-gray-100 min-h-screen">
+        {session.user.role === "ADMIN" ? <SidebarAdmin /> : <SidebarUser />}
+        <main className="mt-23 px-4 sm:px-6 sm:ml-[17rem] w-full">
+          {children}
+        </main>
       </div>
-
     </div>
   );
 }
+

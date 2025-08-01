@@ -6,16 +6,16 @@ import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
   Package,
-  BriefcaseBusiness,
   Menu,
-  Settings
+  MessageSquareMore
 } from 'lucide-react';
 
 const navItems = [
   { href: '/dashboard', label: 'Home', icon: LayoutDashboard },
-  { href: '/dashboard/product', label: 'Product', icon: Package },
-  { href: '/dashboard/employee', label: 'Employee', icon: BriefcaseBusiness },
-  { href: '/dashboard/signup', label: 'Register', icon: Settings },
+  { href: '/dashboard/user/product', label: 'Product', icon: Package },
+  { href: '/dashboard/user/message', label: 'Message', icon: MessageSquareMore },
+//   { href: '/dashboard/employee', label: 'Employee', icon: BriefcaseBusiness },
+//   { href: '/dashboard/signup', label: 'Register', icon: Settings },
 ];
 
 export default function Sidebar() {
