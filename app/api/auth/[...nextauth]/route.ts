@@ -2,13 +2,13 @@ import NextAuth from "next-auth";
 import { PrismaClient } from "@/app/generated/prisma";
 import bcrypt from "bcrypt";
 import { z } from "zod";
-import { NextAuthOptions } from "next-auth";
-// Import your providers here
+import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 const prisma = new PrismaClient();
 
-export const authOptions: NextAuthOptions = {
+// ✅ Keep this as const (not exported)
+const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -17,46 +17,54 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          return null;
+        }
+
         const schema = z.object({
           email: z.string().email(),
           password: z.string().min(6),
         });
 
-        const { email, password } = schema.parse(credentials);
+        try {
+          const { email, password } = schema.parse(credentials);
 
-        const user = await prisma.user.findUnique({ where: { email } });
+          const user = await prisma.user.findUnique({ where: { email } });
 
-        if (!user) throw new Error("No user found");
-        if (!user.password) throw new Error("No password set for user");
-        if (!user.verifiedAt) throw new Error("User not verified");
-        const valid = await bcrypt.compare(password, user.password);
-        if (!valid) throw new Error("Invalid password");
+          if (!user || !user.password || !user.verifiedAt) {
+            return null;
+          }
+          
+          const valid = await bcrypt.compare(password, user.password);
+          if (!valid) return null;
 
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
-        };
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+          };
+        } catch (error) {
+          console.error("Auth error:", error);
+          return null;
+        }
       },
     }),
   ],
   session: { strategy: "jwt" },
   pages: { signIn: "/signin" },
   secret: process.env.NEXTAUTH_SECRET,
-
   callbacks: {
-    // ✅ Tambahkan role ke JWT
     async jwt({ token, user }) {
       if (user) {
         token.role = user.role;
       }
       return token;
     },
-    // ✅ Tambahkan role ke session.user
     async session({ session, token }) {
       if (token && session.user) {
-        session.user.role = token.role as string;
+        session.user.id = token.sub!;
+        session.user.role = token.role;
       }
       return session;
     },
@@ -64,4 +72,6 @@ export const authOptions: NextAuthOptions = {
 };
 
 const handler = NextAuth(authOptions);
+
+// ✅ Only export the handlers
 export { handler as GET, handler as POST };
