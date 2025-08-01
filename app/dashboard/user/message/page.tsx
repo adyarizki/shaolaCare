@@ -69,7 +69,7 @@ export default function  MessageTable() {
 
     if (res.ok) {
       setMessages((prev) => prev.filter((p) => p.id !== id));
-      router.push('/dashboard/message');
+      router.push('/dashboard/user/message');
     } else {
       alert('Gagal menghapus message.');
     }

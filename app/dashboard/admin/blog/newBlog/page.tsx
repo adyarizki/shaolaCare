@@ -66,7 +66,7 @@ export default function AddBlogPage() {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <Label htmlFor="title">Judul</Label>
+                <Label htmlFor="title">Title</Label>
                 <Input
                   id="title"
                   name="title"
@@ -76,7 +76,7 @@ export default function AddBlogPage() {
                 />
               </div>
               <div>
-                <Label htmlFor="content">Konten</Label>
+                <Label htmlFor="content">Content</Label>
                 <Textarea
                   id="content"
                   name="content"

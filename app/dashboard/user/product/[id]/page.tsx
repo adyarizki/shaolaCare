@@ -6,6 +6,7 @@ import { useRouter, useParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import Breadcrumb from "@/components/breadcrumb";
 
@@ -108,12 +109,14 @@ export default function EditProductPage() {
     <Card className="max-w-lg mx-auto p-6 mt-10">
       <h2 className="text-xl font-semibold mb-4">Update Product</h2>
       <form onSubmit={handleUpdate} className="space-y-4">
+        <Label>Product Name</Label>
         <Input
           placeholder="Name Product"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
         />
+        <Label>Stock</Label>
         <Input
           type="number"
           placeholder="Stock"
@@ -123,6 +126,7 @@ export default function EditProductPage() {
           min="0"
           step="1"
         />
+        <Label>Price</Label>
         <Input
           type="number"
           placeholder="Price"
