@@ -1,48 +1,64 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import {
-  ResponsiveContainer,
   BarChart,
   Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
+  ResponsiveContainer,
 } from "recharts";
+import { Skeleton } from "@/components/ui/skeleton";
 
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from "@/components/ui/card";
+type ProductStock = {
+  name: string;
+  stock: number;
+};
 
-const data = [
-  { name: "Jan", students: 120 },
-  { name: "Feb", students: 150 },
-  { name: "Mar", students: 170 },
-  { name: "Apr", students: 90 },
-  { name: "Mei", students: 200 },
-  { name: "Jun", students: 160 },
-];
+export default function Chart() {
+  const [data, setData] = useState<ProductStock[]>([]);
+  const [loading, setLoading] = useState(true);
 
-export default function StudentChart() {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch("/api/chart/");
+        const json = await res.json();
+        setData(json);
+      } catch (error) {
+        console.error("Failed to load chart data", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md">
+        <h2 className="text-lg font-semibold mb-4">Stok Produk</h2>
+        <Skeleton className="h-6 w-1/3 mb-3" />
+        <Skeleton className="h-[300px] w-full" />
+      </div>
+    );
+  }
+
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Statistik Jumlah Siswa per Bulan</CardTitle>
-      </CardHeader>
-      <CardContent className="h-64">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Bar dataKey="students" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
-      </CardContent>
-    </Card>
+    <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md">
+      <h2 className="text-lg font-semibold mb-4">Stok Produk</h2>
+      <ResponsiveContainer width="100%" height={300}>
+        <BarChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+          <YAxis />
+          <Tooltip />
+          <Bar dataKey="stock" fill="#6366F1" />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
   );
 }

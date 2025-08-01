@@ -69,7 +69,7 @@ export default function ProductTable() {
 
     if (res.ok) {
       setProducts((prev) => prev.filter((p) => p.id !== id));
-      router.push('/dashboard/product');
+      router.push('/dashboard/user/product');
     } else {
       alert('Gagal menghapus produk.');
     }
@@ -86,7 +86,7 @@ export default function ProductTable() {
         <Breadcrumb crumbs={crumbs} />
       </div>
 
-      <Link href="/dashboard/product/newProduct">
+      <Link href="/dashboard/user/product/newProduct">
         <Button className="px-3 py-3 text-base bg-blue-600 ml-auto flex mt-4">Add Product</Button>
       </Link>
 
@@ -122,7 +122,7 @@ export default function ProductTable() {
               <TableCell>{product.stock}</TableCell> 
               <TableCell>Rp {product.price.toLocaleString()}</TableCell>
               <TableCell className="flex gap-2 justify-center">
-                <Link href={`/dashboard/product/${product.id}`}>
+                <Link href={`/dashboard/user/product/${product.id}`}>
                 <Button className="cursor-pointer" variant="outline" size="icon">
                   <Pencil className="w-4 h-4" />
                 </Button>

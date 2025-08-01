@@ -7,13 +7,16 @@ import {
   LayoutDashboard,
   Package,
   Menu,
-  MessageSquareMore
+  MessageSquareMore,
+  StickyNote
 } from 'lucide-react';
 
 const navItems = [
   { href: '/dashboard', label: 'Home', icon: LayoutDashboard },
   { href: '/dashboard/user/product', label: 'Product', icon: Package },
   { href: '/dashboard/user/message', label: 'Message', icon: MessageSquareMore },
+  { href: '/dashboard/user/blog', label: 'Blog health', icon: StickyNote },
+
 //   { href: '/dashboard/employee', label: 'Employee', icon: BriefcaseBusiness },
 //   { href: '/dashboard/signup', label: 'Register', icon: Settings },
 ];
