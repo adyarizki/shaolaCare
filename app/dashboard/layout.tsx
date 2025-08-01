@@ -5,7 +5,7 @@ import SidebarAdmin from "@/components/sidebarAdmin";
 import SidebarUser from "@/components/sidebarUser";
 import Navbar from "@/components/navbar";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"; // Pindahkan ke file server-only
+import { authOptions } from "@/lib/auth"; // ✅ Import from the config file
 import { redirect } from "next/navigation";
 
 export default async function DashboardLayout({
