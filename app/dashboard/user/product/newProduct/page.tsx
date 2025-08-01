@@ -42,7 +42,7 @@ export default function AddProductPage() {
 
     if (res.ok) {
       alert("Produk berhasil ditambahkan!");
-      router.push("/dashboard/admin/product");
+      router.push("/dashboard/user/product");
       setFormData({ name: "", price: "", stock: "" });
     } else {
       alert("Gagal menambahkan produk.");
@@ -51,7 +51,7 @@ export default function AddProductPage() {
 
   const crumbs = [
     { label: "Dashboard", href: "/dashboard" },
-    { label: "Product", href: "/dashboard/admin/product" },
+    { label: "Product", href: "/dashboard/user/product" },
     { label: "Add Product", href: "" },
   ];
 

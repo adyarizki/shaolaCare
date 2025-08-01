@@ -32,7 +32,7 @@ export async function middleware(req: NextRequest) {
   if (isAdminRoute && token?.role !== "admin") {
     return NextResponse.redirect(new URL("/403", req.url));
   }
-
+  
   return NextResponse.next();
 }
 
