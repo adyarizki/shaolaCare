@@ -54,7 +54,7 @@ export default function Page() {
       });
 
       setTimeout(() => {
-        router.push("/dashboard/verify");
+        router.push("/dashboard/admin/verify");
       }, 1000);
     } else {
       setAlert({
