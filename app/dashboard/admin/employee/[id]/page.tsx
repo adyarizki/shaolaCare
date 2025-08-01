@@ -74,7 +74,7 @@ export default function EditEmployeePage() {
 
       if (res.ok) {
         alert("Data berhasil diperbarui!");
-        router.push("/dashboard/employee");
+        router.push("/dashboard/admin/employee");
       } else {
         const err = await res.json();
         alert("Gagal update: " + err?.error || "Unknown error");
@@ -89,7 +89,7 @@ export default function EditEmployeePage() {
 
   const crumbs = [
     { label: "Dashboard", href: "/dashboard" },
-    { label: "Employee", href: "/dashboard/employee" },
+    { label: "Employee", href: "/dashboard/admin/employee" },
     { label: "Edit Employee", href: "" },
   ];
 

@@ -70,6 +70,7 @@ export default function EmployeeTable() {
       });
 
       if (res.ok) {
+        
         setEmployees((prev) => prev.filter((e) => e.id !== id));
         router.refresh();
       } else {
@@ -88,7 +89,7 @@ export default function EmployeeTable() {
         <Breadcrumb crumbs={crumbs} />
       </div>
 
-      <Link href="/dashboard/employee/newEmployee">
+      <Link href="/dashboard/admin/employee/newEmployee">
         <Button className="px-3 py-3 text-base bg-blue-600 ml-auto flex mt-4">Add Employee</Button>
       </Link>
 
@@ -128,7 +129,7 @@ export default function EmployeeTable() {
             <TableCell>{employee.position}</TableCell>
             <TableCell>{employee.department}</TableCell>
             <TableCell className="flex gap-2 justify-center">
-              <Link href={`/dashboard/employee/${employee.id}`}>
+              <Link href={`/dashboard/admin/employee/${employee.id}`}>
                 <Button className="cursor-pointer" variant="outline" size="icon">
                   <Pencil className="w-4 h-4" />
                 </Button>

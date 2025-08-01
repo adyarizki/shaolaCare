@@ -15,7 +15,7 @@ export async function GET() {
 const blogSchema = z.object({
   title: z.string(),
   content: z.string(),
-  createdAt: z.string(),
+
 });
 
 export async function POST(req: Request) {

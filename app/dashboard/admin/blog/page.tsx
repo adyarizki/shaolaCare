@@ -86,7 +86,7 @@ export default function BlogTable() {
         <Breadcrumb crumbs={crumbs} />
       </div>
 
-      <Link href="/dashboard/blog/newBlog">
+      <Link href="/dashboard/admin/blog/newBlog">
         <Button className="px-3 py-3 text-base bg-blue-600 ml-auto flex mt-4">Add Blog</Button>
       </Link>
 
@@ -126,7 +126,7 @@ export default function BlogTable() {
             </TableCell>
                         <TableCell>{blog.createdAt}</TableCell>
             <TableCell className="flex gap-2 justify-center">
-              <Link href={`/dashboard/employee/${blog.id}`}>
+              <Link href={`/dashboard/admin/blog/${blog.id}`}>
                 <Button className="cursor-pointer" variant="outline" size="icon">
                   <Pencil className="w-4 h-4" />
                 </Button>

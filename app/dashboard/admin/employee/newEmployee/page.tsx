@@ -1,12 +1,13 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import Breadcrumb from "@/components/breadcrumb";
-import { useState } from "react";
 import {
   Select,
   SelectContent,
@@ -14,8 +15,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Loader2 } from "lucide-react";
 
 export default function AddEmployeePage() {
+  const router = useRouter();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -25,12 +29,15 @@ export default function AddEmployeePage() {
     department: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
 
     const res = await fetch("/api/employee", {
       method: "POST",
@@ -40,16 +47,11 @@ export default function AddEmployeePage() {
       body: JSON.stringify(formData),
     });
 
+    setIsLoading(false);
+
     if (res.ok) {
       alert("Employee berhasil ditambahkan!");
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        address: "",
-        position: "",
-        department: "",
-      });
+      router.push("/dashboard/admin/employee");
     } else {
       alert("Gagal menambahkan employee.");
     }
@@ -57,7 +59,7 @@ export default function AddEmployeePage() {
 
   const crumbs = [
     { label: "Dashboard", href: "/dashboard" },
-    { label: "Employee", href: "/dashboard/employee" },
+    { label: "Employee", href: "/dashboard/admin/employee" },
     { label: "Add Employee", href: "" },
   ];
 
@@ -127,24 +129,38 @@ export default function AddEmployeePage() {
               </div>
               <div>
                 <Label htmlFor="department">Department</Label>
-                    <Select
-                        value={formData.department}
-                        onValueChange={(value) => setFormData({ ...formData, department: value })}
-                    >
-                        <SelectTrigger id="department">
-                        <SelectValue placeholder="Select a department" />
-                        </SelectTrigger>
-                        <SelectContent>
-                        <SelectItem value="Sales">Sales</SelectItem>
-                        <SelectItem value="Marketing">Marketing</SelectItem>
-                        <SelectItem value="HR">HR</SelectItem>
-                        <SelectItem value="Finance">Finance</SelectItem>
-                        <SelectItem value="IT">IT</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-              <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-500">
-                Simpan
+                <Select
+                  value={formData.department}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, department: value })
+                  }
+                >
+                  <SelectTrigger id="department">
+                    <SelectValue placeholder="Select a department" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Sales">Sales</SelectItem>
+                    <SelectItem value="Marketing">Marketing</SelectItem>
+                    <SelectItem value="HR">HR</SelectItem>
+                    <SelectItem value="Finance">Finance</SelectItem>
+                    <SelectItem value="IT">IT</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-blue-600 hover:bg-blue-500 flex items-center justify-center gap-2"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Menyimpan...
+                  </>
+                ) : (
+                  "Simpan"
+                )}
               </Button>
             </form>
           </CardContent>

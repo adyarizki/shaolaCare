@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
+import Breadcrumb from "@/components/breadcrumb";
 
 interface Product {
   id: string;
@@ -71,7 +72,7 @@ export default function EditProductPage() {
 
       if (res.ok) {
         alert("Product updated successfully!");
-        router.push("/dashboard/product"); // Fixed redirect path
+        router.push("/dashboard/admin/product"); // Fixed redirect path
       } else {
         const errorData = await res.json();
         alert(`Failed to update product: ${errorData.error || "Unknown error"}`);
@@ -92,8 +93,18 @@ export default function EditProductPage() {
       </Card>
     );
   }
+  const crumbs = [
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Product", href: "/dashboard/admin/product" },
+    { label: "Update Product", href: "" },
+  ];
 
   return (
+<div className="min-h-screen bg-gray-50 py-5">
+      <div className="container mx-auto px-4">
+        <div className="flex justify-end">
+          <Breadcrumb crumbs={crumbs} />
+        </div>
     <Card className="max-w-lg mx-auto p-6 mt-10">
       <h2 className="text-xl font-semibold mb-4">Update Product</h2>
       <form onSubmit={handleUpdate} className="space-y-4">
@@ -133,5 +144,8 @@ export default function EditProductPage() {
         </Button>
       </form>
     </Card>
+  
+    </div>  
+    </div>
   );
 }
