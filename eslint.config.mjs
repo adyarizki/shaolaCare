@@ -9,6 +9,13 @@ const compat = new FlatCompat({
 const eslintConfig = [
   ...compat.extends('next/core-web-vitals'),
   {
+    rules: {
+      'react/no-unescaped-entities': ['error', {
+        forbid: ['>', '}']  // Only forbid > and }, allow apostrophes
+      }]
+    }
+  },
+  {
     ignores: [
       'node_modules/**',
       '.next/**',
@@ -16,6 +23,7 @@ const eslintConfig = [
       'build/**',
       '.vercel/**',
       'public/**',
+      'app/generated/**',
     ],
   },
 ]
