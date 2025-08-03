@@ -5,18 +5,23 @@ import { notFound } from "next/navigation";
 import Navbar from "@/components/landingPage/NavbarBlogDetail";
 import Footer from "@/components/landingPage/Footer";
 import { headers } from "next/headers";
+import Image from "next/image";
+import Breadcrumb from "@/components/breadcrumb";
 
 type Props = {
   params: Promise<{ id: string }>;
 };
 
-// Define the blog post type for better type safety
+// Updated blog post type to match your API response
 interface BlogPost {
   id: string;
   title: string;
   content: string;
   createdAt: string;
-  author?: string;
+  authorId: string | null;
+  author: {
+    name: string;
+  } | null; // This matches your API include structure
   category?: string;
   tags?: string[];
 }
@@ -24,6 +29,7 @@ interface BlogPost {
 export default async function BlogDetailPage({ params }: Props) {
   // Await params in Next.js 15+
   const { id } = await params;
+  
   try {
     // Get base URL dynamically from headers
     const host = (await headers()).get("host");
@@ -84,8 +90,15 @@ export default async function BlogDetailPage({ params }: Props) {
       ));
     };
 
+    const crumbs = [
+    { label: "Home", href: "/" },
+    { label: "Blog health", href: "/blogpost" },
+    { label: "Detail BlogHealth", href: "" },
+  ];
+
+
     return (
-      <>
+      <div className="bg-gray-100">
         <Navbar />
         
         {/* Hero Section */}
@@ -99,7 +112,10 @@ export default async function BlogDetailPage({ params }: Props) {
         </section>
 
         {/* Main Content */}
-        <main className="container mx-auto px-4 py-16">
+        <main className="container mx-auto px-4 py-8 ">
+          <div className="flex justify-end">
+            <Breadcrumb crumbs={crumbs} />
+          </div>
           <Card className="max-w-4xl mx-auto shadow-lg">
             <CardHeader className="pb-6">
               {/* Metadata */}
@@ -113,8 +129,8 @@ export default async function BlogDetailPage({ params }: Props) {
                     <Clock className="w-4 h-4" />
                     {getReadTime(post.content)} min read
                   </span>
-                  <Badge variant="secondary" className="text-xs px-2 py-1">
-                    {post.category || "Article"}
+                  <Badge variant="secondary" className="text-xs text-[#355372] ">
+                    Article
                   </Badge>
                 </div>
                 <span className="text-gray-400 text-xs font-mono">
@@ -127,12 +143,24 @@ export default async function BlogDetailPage({ params }: Props) {
                 {post.title}
               </CardTitle>
 
-              {/* Author (if available) */}
-              {post.author && (
-                <p className="text-gray-600 mt-2">
-                  By <span className="font-medium">{post.author}</span>
-                </p>
-              )}
+              <div className="mt-4">
+                <Image
+                  src="/images/toolkit.webp"
+                  alt="medical toolkit"
+                  width={800}
+                  height={400}
+                  className="rounded-lg w-full object-cover max-h-[400px]"
+                />
+              </div>
+
+              {/* Author (FIXED) */}
+              <div>
+                <Badge variant="secondary" className="text-xs  text-[#355372]">
+                  <span className="text-sm text-gray-500 mt-1 font-bold">
+                    By: {post.author?.name || "Penulis tidak dikenal"}
+                  </span>
+                </Badge>
+              </div>
             </CardHeader>
 
             <CardContent className="pt-0">
@@ -159,7 +187,7 @@ export default async function BlogDetailPage({ params }: Props) {
         </main>
 
         <Footer />
-      </>
+      </div>
     );
 
   } catch (error) {

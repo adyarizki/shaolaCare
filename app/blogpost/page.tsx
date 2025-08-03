@@ -1,20 +1,23 @@
 'use client'
 
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Calendar, Clock, ArrowRight, Trash2, Loader2 } from 'lucide-react'
+import { Calendar, Clock, ArrowRight, Loader2 } from 'lucide-react'
 import { useBlogPosts } from '@/hooks/useBlogPosts'
 import NavbarBlog from '@/components/landingPage/NavbarBlog'
 import Footer from '@/components/landingPage/Footer'
-import Link from 'next/link'
+import Image from 'next/image'
 
 export default function BlogList() {
-  const { posts, loading, error, deletePost } = useBlogPosts()
+  const { posts, loading, error } = useBlogPosts()
   const [currentPage, setCurrentPage] = useState(1)
-  const postsPerPage = 5
+  const [loadingArticleId, setLoadingArticleId] = useState<string | null>(null)
+  const router = useRouter()
 
+  const postsPerPage = 5
   const totalPages = Math.ceil(posts.length / postsPerPage)
   const indexOfLastPost = currentPage * postsPerPage
   const indexOfFirstPost = indexOfLastPost - postsPerPage
@@ -43,16 +46,6 @@ export default function BlogList() {
     if (content.length <= maxLength) return content
     return content.slice(0, maxLength).trim() + '...'
   }
-
-  // const handleDelete = async (id: string, title: string) => {
-  //   if (window.confirm(`Are you sure you want to delete "${title}"?`)) {
-  //     try {
-  //       await deletePost(id)
-  //     } catch (err) {
-  //       alert('Failed to delete post')
-  //     }
-  //   }
-  // }
 
   if (loading) {
     return (
@@ -93,7 +86,7 @@ export default function BlogList() {
           <h6 className="font-semibold text-gray-200 ml-40">
             Halaman artikel seputar peralatan kesehatan dan teknologi
           </h6>
-          <div className="flex justify-end pb-5 mr-20 ">
+          <div className="flex justify-end pb-5 mr-20">
             <Badge variant="outline" className="text-gray-100 border-gray-100 font-semibold">
               {posts.length} {posts.length === 1 ? 'post' : 'Posts'}
             </Badge>
@@ -123,38 +116,56 @@ export default function BlogList() {
                   </div>
                   <div>
                     <Badge variant="secondary" className="text-xs text-[#355372] ">
-                    <span className="text-sm text-gray-500 mt-1">Ditulis oleh: {post.author?.name ?? "Penulis tidak dikenal"}</span>
+                      <span className="text-sm text-gray-500 mt-1">
+                        Ditulis oleh: {post.author?.name ?? "Penulis tidak dikenal"}
+                      </span>
                     </Badge>
                   </div>
-                  {/* <Button 
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleDelete(post.id, post.title)}
-                    className="h-8 w-8 p-0 text-gray-400 hover:text-red-600"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button> */}
                 </div>
                 <CardTitle className="text-xl group-hover:text-[#355372] transition-colors leading-tight font-bold">
                   {post.title}
                 </CardTitle>
               </CardHeader>
+
               <CardContent className="pt-0">
-                <CardDescription className="text-gray-600 mb-6 text-base leading-relaxed">
-                  {truncateContent(post.content, 200)}
-                </CardDescription>
-                <div className="flex items-center justify-between">
-                <Link href={`/blogpost/${post.id}`} >
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="p-0 h-auto bg- font-medium bg-[#355372] text-white hover:bg-[#6b8fb3] hover:text-gray-100"
-                  >
-                    Read full article
-                    <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
-                  </Button>
-                </Link>
-                  <div className="text-sm text-gray-400">#{post.id.slice(-6)}</div>
+                <div className="flex gap-6">
+                  {/* Gambar di sebelah kiri */}
+                  <div className="min-w-[150px] max-w-[150px] h-[150px] relative rounded overflow-hidden">
+                    <Image
+                      src="/images/blog.png"
+                      alt="Blog Health"
+                      fill
+                      className="object-cover rounded"
+                    />
+                  </div>
+
+                  {/* Konten di sebelah kanan */}
+                  <div className="flex-1">
+                    <CardDescription className="text-gray-600 mb-6 text-base leading-relaxed">
+                      {truncateContent(post.content, 200)}
+                    </CardDescription>
+                    <div className="flex items-center justify-between">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="p-0 h-auto font-medium bg-[#355372] text-white hover:bg-[#6b8fb3] hover:text-gray-100 px-3 py-1"
+                        onClick={() => {
+                          setLoadingArticleId(post.id)
+                          router.push(`/blogpost/${post.id}`)
+                        }}
+                      >
+                        {loadingArticleId === post.id ? (
+                          <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                        ) : (
+                          <>
+                            Read full article
+                            <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+                          </>
+                        )}
+                      </Button>
+                      <div className="text-sm text-gray-400">#{post.id.slice(-6)}</div>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
