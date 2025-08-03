@@ -1,38 +1,55 @@
 // app/api/products/route.ts
 import { NextResponse } from 'next/server';
+import { getServerSession } from "next-auth";
 import { prisma } from '@/lib/prisma';
+import { authOptions } from "@/lib/auth";
 import { z } from "zod";
 
 
 export async function GET() {
-  const blogs = await prisma.blogpost.findMany({
-    orderBy: { createdAt: 'desc' },
-  });
-  return NextResponse.json(blogs);
-}
-
-
-const blogSchema = z.object({
-  title: z.string(),
-  content: z.string(),
-
-});
-
-export async function POST(req: Request) {
   try {
-    const body = await req.json();
-    const validatedData = blogSchema.parse(body);
-
-    const blog = await prisma.blogpost.create({
-      data: validatedData,
+    const posts = await prisma.blogpost.findMany({
+      orderBy: {
+        createdAt: 'desc',
+      },
+      include: {
+        author: {
+          select: {
+            name: true, // hanya ambil nama penulis
+          },
+        },
+      },
     });
 
-    return NextResponse.json(blog, { status: 201 });
+    return NextResponse.json(posts, { status: 200 });
   } catch (error) {
-    console.error("[EMPLOYEE_POST_ERROR]", error);
+    console.error('Error fetching blog posts:', error);
+
     return NextResponse.json(
-      { error: "Failed to create blog" },
+      { error: 'Failed to fetch blog posts' },
       { status: 500 }
     );
   }
+}
+
+
+export async function POST(req: Request) {
+  const session = await getServerSession(authOptions);
+  console.log("SESSION:", session); // ✅ cek apakah ada id
+
+  if (!session || !session.user) {
+    return new NextResponse("Unauthorized", { status: 401 });
+  }
+
+  const { title, content } = await req.json();
+
+  const post = await prisma.blogpost.create({
+    data: {
+      title,
+      content,
+      authorId: session.user.id,
+    },
+  });
+
+  return NextResponse.json(post);
 }

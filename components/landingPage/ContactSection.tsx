@@ -41,6 +41,7 @@ export default function ContactSection() {
   };
 
   return (
+    <div className="w-full bg-gray-50">
     <section id="kontak" className="py-16 px-4 max-w-3xl mx-auto">
       <h3 className="text-2xl font-semibold text-center text-[#2a435a] mb-10">
         Hubungi Kami
@@ -53,7 +54,7 @@ export default function ContactSection() {
           onChange={handleChange}
           type="text"
           placeholder="Nama Anda"
-          className="w-full p-3 border border-gray-300 rounded"
+          className="w-full p-3 border border-[#2a435a] rounded"
           required
         />
 
@@ -64,7 +65,7 @@ export default function ContactSection() {
           onChange={handleChange}
           type="email"
           placeholder="Email Anda"
-          className="w-full p-3 border border-gray-300 rounded"
+          className="w-full p-3 border border-[#2a435a] rounded"
           required
         />
 
@@ -75,7 +76,7 @@ export default function ContactSection() {
           onChange={handleChange}
           rows={4}
           placeholder="Pesan Anda"
-          className="w-full p-3 border border-gray-300 rounded"
+          className="w-full p-3 border border-[#2a435a] rounded"
           required
         ></textarea>
 
@@ -95,5 +96,6 @@ export default function ContactSection() {
         </button>
       </form>
     </section>
+    </div>
   );
 }

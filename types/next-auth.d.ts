@@ -16,7 +16,14 @@ declare module "next-auth" {
     id: string;
     name: string;
     email: string;
-    role: string; // ditambahkan saat login sukses
+    role: string; 
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    id: string;      
+    role: string;
   }
 }
 

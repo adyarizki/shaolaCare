@@ -21,7 +21,7 @@ const platforms = [
 
 export default function PlatformCards() {
   return (
-    <div className="w-full bg-gray-100">
+    <div className="w-full bg-gray-200">
     <section id="cara" className="w-full py-16 px-4 max-w-7xl mx-auto ">
       <h3 className="text-2xl font-semibold text-center text-[#355372] mb-10">
         Cara Pembelian Produk
