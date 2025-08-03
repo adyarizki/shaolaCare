@@ -2,7 +2,7 @@
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect, useState } from "react";
-import { Users, ShoppingCart, DollarSign, Box } from "lucide-react";
+import { Users, MessageSquare, StickyNote, Box } from "lucide-react";
 import Chart from "@/components/chart";
 
 export default function DashboardPage() {
@@ -45,14 +45,14 @@ export default function DashboardPage() {
         <CardStat
           title="Pesan Masuk"
           value={stats.totalMessages}
-          icon={<ShoppingCart className="text-green-500 w-6 h-6" />}
+          icon={<MessageSquare className="text-green-500 w-6 h-6" />}
           loading={loading}
         />
         {/* Card 3 */}
         <CardStat
           title="Jumlah Blogpost"
           value={stats.totalBlogposts}
-          icon={<DollarSign className="text-yellow-500 w-6 h-6" />}
+          icon={<StickyNote className="text-yellow-500 w-6 h-6" />}
           loading={loading}
         />
         {/* Card 4 */}
